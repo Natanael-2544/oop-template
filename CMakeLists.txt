@@ -52,6 +52,10 @@ add_executable(${MAIN_EXECUTABLE_NAME}
     main.cpp
         Camera.cpp
         Camera.h
+        Angajat.cpp
+        Angajat.h
+        CheckInOut.cpp
+        CheckInOut.h
 )
 
 # NOTE: Add all defined targets (e.g. executables, libraries, etc. )
