@@ -10,13 +10,15 @@ Aplicația va permite gestionarea camerelor și rezervărilor clienților. Fieca
 - **Preț standard pe noapte pentru Single:** 100
 - **Double:** 150% din prețul Single dacă are vedere la mare; altfel 120%
 - **Suite:** 250% din prețul Single dacă are vedere la mare; altfel 200%
-- **Room service:** 50/unitate/zi
+- **Mic dejun:** +20 pe noapte
+- **Room service:** 5/unitate/zi
+
 ---
 
 ### **Valori implicite și energie angajați**
 - Toți angajații încep cu **100 puncte energie** la începutul fiecărui ciclu
 - **Tipuri de angajați și energie consumată:**
-    - **Receptioner:** 25 energie pentru check-in
+    - **Receptioner:** 25 energie pentru check-in/check-out
     - **Menajer:** 25 energie pentru room service/curățenie
     - **Manager:** 5 energie per cameră ocupată
 
@@ -33,7 +35,7 @@ Simulatorul rulează pe baza unui **ciclu** cu următoarele etape:
     - Angajații își consumă energia conform tipului și sarcinilor
 
 3. **Check-out:** finalizare șederii și calcularea costului total
-    - Cost total = preț cameră (calculat după tip și procente) + room service
+    - Cost total = preț cameră (calculat după tip și procente) + mic dejun + room service
 
 ---
 
