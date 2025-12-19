@@ -33,7 +33,7 @@ public:
     Single(const int& nrNopti_, bool micDejun_ = false)
         : Camera(nrNopti_, 100, micDejun_) {}
 
-    void afisare(std::ostream& out) const {
+    void afisare(std::ostream& out) const override {
         out<<" Single: "<< getId()
              << " (NrNopti= " <<nrNopti
              << " MicDejun= " <<micDejun<< ")";
@@ -47,7 +47,7 @@ class Double: public Camera {
     public:
     Double(const int& nrNopti_, bool micDejun_ = false, bool vedereMare_ = false)
         : Camera(nrNopti_, 100 * 1.25, micDejun_), vedereMare(vedereMare_) {}
-    void afisare(std::ostream& out) const {
+    void afisare(std::ostream& out) const override {
         out<<" Double: "<< getId()
              << " (NrNopti= " <<nrNopti
              << " MicDejun= " <<micDejun
@@ -66,7 +66,7 @@ class Suite: public Camera {
 public:
     Suite(const int& nrNopti_, bool micDejun_ = false, bool vedereMare_ = false, bool minibar_ = false)
         : Camera(nrNopti_, 100 * 1.5, micDejun_), vedereMare(vedereMare_), minibar(minibar_) {}
-    void afisare(std::ostream& out) const {
+    void afisare(std::ostream& out) const override {
         out<<" Suite: "<< getId()
              << " (NrNopti= " <<nrNopti
              << " MicDejun= " <<micDejun
