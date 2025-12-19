@@ -1,6 +1,8 @@
 #include <iostream>
 #include <vector>
+#include <stdexcept>
 
+//Clasa Camera: Single, Double, Suite
 class Camera {
     static int idGenerator;
     int id;
@@ -26,7 +28,7 @@ public:
         c.afisare(out);
         return out;
     }
-    virtual ~ Camera();
+    virtual ~ Camera()=default;
 };
 int Camera::idGenerator = 0;
 
@@ -85,6 +87,78 @@ public:
         return pret;
     }
 };
+//----------------------------------------------------------------------------
+//Clasa Angajat
+
+class CheckInOut {
+public:
+    virtual void checkIn(int camareOcupate) = 0;
+    virtual void checkOut(int camareOcupate) = 0;
+    virtual ~CheckInOut() {}
+};
+
+class Angajat {
+    static int idGenAngajat;
+protected:
+    int idAngajat;
+    int energie;
+    void consumaEnergie(int cost) {
+        energie -= cost;
+        if (energie < 0) {
+            throw std::runtime_error("Angajat " + std::to_string(idAngajat) + " a rămas fără energie!");
+        }
+    }
+public:
+    Angajat(const int& energie_=100):
+        idAngajat(++idGenAngajat), energie(energie_) {}
+    int getEnergie()const {return energie;}
+    int getIdAngajat()const {return idAngajat;}
+    void resetEnergie() { energie = 100; }
+    virtual void servicii()=0;
+    virtual ~Angajat()=default;
+};
+int Angajat::idGenAngajat=0;
+
+class Receptioner: public Angajat, public CheckInOut {
+public:
+    Receptioner(): Angajat(){}
+    void checkIn(int camereOcupate) override {
+        std::cout << "Receptioner " << idAngajat << " face check-in.\n";
+        consumaEnergie(25);
+    }
+    void checkOut(int camereOcupate) override {
+        std::cout << "Receptioner " << idAngajat << " face check-out.\n";
+        consumaEnergie(25);
+    }
+    void servicii() override {
+        // Receptioner nu face room service
+    }
+};
+
+class Menajer : public Angajat {
+public:
+    Menajer() : Angajat() {}
+
+    void servicii() override {
+        std::cout << "Menajer " << idAngajat << " efectuează room service/curățenie.\n";
+        consumaEnergie(15);
+    }
+};
+
+class Manager : public Angajat, public CheckInOut {
+public:
+    Manager() : Angajat() {}
+    void checkIn(int camereOcupate) override {
+        std::cout << "Manager " << idAngajat << " supraveghează check-in.\n";
+        consumaEnergie(5 * camereOcupate);
+    }
+    void checkOut( int camereOcupate ) override {
+        std::cout << "Manager " << idAngajat << " supraveghează check-out.\n";
+        consumaEnergie(5 * camereOcupate);
+    }
+};
+
+
 int main() {
 
     return 0;
