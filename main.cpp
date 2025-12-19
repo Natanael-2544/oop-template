@@ -32,7 +32,7 @@ int Camera::idGenerator = 0;
 
 class Single: public Camera {
 public:
-    Single(const int& nrNopti_, const int& pretNoapte, bool micDejun_ = false, bool roomService_=false):
+    Single(const int& nrNopti_, bool micDejun_ = false, bool roomService_=false):
          Camera(nrNopti_, 100, micDejun_, roomService_) {}
 
     void afisare(std::ostream& out) const override {
@@ -48,7 +48,7 @@ public:
 class Double: public Camera {
     bool vedereMare;
     public:
-    Double(const int& nrNopti_, const int& pretNoapte_,  bool micDejun_ = false, bool roomService_=false, bool vedereMare_ = false)
+    Double(const int& nrNopti_,  bool micDejun_ = false, bool roomService_=false, bool vedereMare_ = false)
         : Camera(nrNopti_, 100 * 1.25, micDejun_, roomService_), vedereMare(vedereMare_) {}
     void afisare(std::ostream& out) const override {
         out<<" Double: "<< getId()
