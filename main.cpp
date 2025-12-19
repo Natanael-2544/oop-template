@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <stdexcept>
+#include <string>
 
 //Clasa Camera: Single, Double, Suite
 class Camera {
@@ -105,7 +106,7 @@ protected:
     void consumaEnergie(int cost) {
         energie -= cost;
         if (energie < 0) {
-            throw std::runtime_error("Angajat " + std::to_string(idAngajat) + " a rămas fără energie!");
+            std::cout<<"Angajatul "<<idAngajat<<" a rămas fără energie!";
         }
     }
 public:
