@@ -11,8 +11,6 @@ Aplicația va permite gestionarea camerelor și rezervărilor clienților. Fieca
 - **Double:** 150% din prețul Single dacă are vedere la mare; altfel 120%
 - **Suite:** 250% din prețul Single dacă are vedere la mare; altfel 200%
 - **Room service:** 50/unitate/zi
-- Dacă la final mizeria este mare, consumul de energie al menajerilor crește cu +20
-
 ---
 
 ### **Valori implicite și energie angajați**
