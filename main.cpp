@@ -8,14 +8,16 @@ protected:
     int nrNopti;
     int pretNoapte;
     bool micDejun;
+    bool roomService;
     double calcPretBaza() const {
         double pret = pretNoapte;
-        if (micDejun) pret += 20;
+        if (micDejun) {pret += 20;}
+        if (roomService) {pret += 5;}
         return pret * nrNopti;
     }
 public:
-    Camera(const int& nrNopti_, const int& pretNoapte_=100, bool micDejun_=false):
-    id(++idGenerator), nrNopti(nrNopti_), pretNoapte(pretNoapte_), micDejun(micDejun_) {}
+    Camera(const int& nrNopti_, const int& pretNoapte_=100, bool micDejun_=false, bool roomService_=false):
+    id(++idGenerator), nrNopti(nrNopti_), pretNoapte(pretNoapte_), micDejun(micDejun_), roomService(roomService_) {}
     int getId()const{ return id;}
 
     virtual double calcPret()=0;
@@ -30,13 +32,14 @@ int Camera::idGenerator = 0;
 
 class Single: public Camera {
 public:
-    Single(const int& nrNopti_, bool micDejun_ = false)
-        : Camera(nrNopti_, 100, micDejun_) {}
+    Single(const int& nrNopti_, const int& pretNoapte, bool micDejun_ = false, bool roomService_=false):
+         Camera(nrNopti_, 100, micDejun_, roomService_) {}
 
     void afisare(std::ostream& out) const override {
         out<<" Single: "<< getId()
              << " (NrNopti= " <<nrNopti
-             << " MicDejun= " <<micDejun<< ")";
+             << " MicDejun= " <<micDejun
+             << " RoomService= " <<roomService<< ")\n";
     }
     double calcPret() override {
         return calcPretBaza();}
@@ -45,13 +48,14 @@ public:
 class Double: public Camera {
     bool vedereMare;
     public:
-    Double(const int& nrNopti_, bool micDejun_ = false, bool vedereMare_ = false)
-        : Camera(nrNopti_, 100 * 1.25, micDejun_), vedereMare(vedereMare_) {}
+    Double(const int& nrNopti_, const int& pretNoapte_,  bool micDejun_ = false, bool roomService_=false, bool vedereMare_ = false)
+        : Camera(nrNopti_, 100 * 1.25, micDejun_, roomService_), vedereMare(vedereMare_) {}
     void afisare(std::ostream& out) const override {
         out<<" Double: "<< getId()
              << " (NrNopti= " <<nrNopti
              << " MicDejun= " <<micDejun
-             <<" VedereMare= " <<vedereMare<< ")";
+             << " RoomService= " <<roomService
+             <<" VedereMare= " <<vedereMare<< ")\n";
     }
     double calcPret() override {
         double pret = calcPretBaza();
@@ -64,12 +68,13 @@ class Suite: public Camera {
     bool vedereMare;
     bool minibar;
 public:
-    Suite(const int& nrNopti_, bool micDejun_ = false, bool vedereMare_ = false, bool minibar_ = false)
-        : Camera(nrNopti_, 100 * 1.5, micDejun_), vedereMare(vedereMare_), minibar(minibar_) {}
+    Suite(const int& nrNopti_, bool micDejun_ = false, bool roomService_=false, bool vedereMare_ = false, bool minibar_ = false)
+        : Camera(nrNopti_, 100 * 1.5, micDejun_, roomService_), vedereMare(vedereMare_), minibar(minibar_) {}
     void afisare(std::ostream& out) const override {
         out<<" Suite: "<< getId()
              << " (NrNopti= " <<nrNopti
              << " MicDejun= " <<micDejun
+             << "roomService= "<<roomService
              <<" VedereMare= " <<vedereMare
              <<" Minibar= " <<minibar<< ")";
     }
