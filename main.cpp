@@ -15,7 +15,7 @@ protected:
     }
 public:
     Camera(const int& nrNopti_, const int& pretNoapte_=100, bool micDejun_=false):
-    nrNopti(nrNopti_), pretNoapte(pretNoapte_), micDejun(micDejun_), id(++idGenerator) {}
+    id(++idGenerator), nrNopti(nrNopti_), pretNoapte(pretNoapte_), micDejun(micDejun_) {}
     int getId()const{ return id;}
 
     virtual double calcPret()=0;
