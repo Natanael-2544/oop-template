@@ -24,7 +24,7 @@ public:
     id(++idGenerator), nrNopti(nrNopti_), pretNoapte(pretNoapte_), micDejun(micDejun_), roomService(roomService_) {}
     int getId()const{ return id;}
 
-    virtual double calcPret()=0;
+    virtual double calcPret() const =0;
     virtual void afisare(std::ostream& out) const = 0;
     friend std::ostream& operator<<(std::ostream& out, const Camera& c) {
         c.afisare(out);
@@ -158,8 +158,34 @@ public:
         std::cout << "Manager " << idAngajat << " supraveghează check-out.\n";
         consumaEnergie(5 * camereOcupate);
     }
+    void servicii() override{}
+};
+//----------------------------------------------------------------------------
+//Camera factory si Angajat factoru
+
+class CameraFactory {
+public:
+    static Camera* creeazaCamera (int tip, int nopti, bool micDejun, bool roomService, bool vedereMare=false, bool minibar=false) {
+        switch (tip) {
+            case 1: return new Single(nopti, micDejun, roomService);
+            case 2: return new Double(nopti, micDejun, roomService, vedereMare);
+            case 3: return new Suite(nopti, micDejun, roomService, vedereMare, minibar);
+            default: throw std::invalid_argument("Tip camera invalid");
+        }
+    }
 };
 
+class AngajatFactory {
+public:
+    static Angajat* creeazaAngajat (int tip) {
+        switch (tip) {
+            case 1: return new Receptioner();
+            case 2: return new Menajer();
+            case 3: return new Manager();
+            default: throw std::invalid_argument("Tip angajat invalid");
+        }
+    }
+};
 //----------------------------------------------------------------------------
 class Hotel {
     std::vector<Camera*> camere;
@@ -190,34 +216,72 @@ public:
     }
 
     void afisareRezervari() {
-
+        if (camere.empty()) {
+            std::cout << "Nu exista rezervari.\n";
+            return;
+        }
+        std::cout << "Rezervari hotel:\n";
+        for (auto c: camere) {
+            std::cout << *c;
+        }
     }
 };
 
-int afisare() {
-    int x;
-    std::cout << "1.Adauga Single"<<" ";
-    std::cout<<"2.Adauga Double"<<" ";
-    std::cout<<"3.Adauga Suite"<<" ";
-    std::cout << "4.Upgrade element ";
-    std::cout << "5.Afiseaza camere ";
-    std::cout << "\nOptiune: ";
-    std::cin >> x;
-    return x;
+void afisareOptiuniCamera(int &nopti, bool &micDejun, bool &roomService) {
+    std::cout << "Nr nopti: ";
+    std::cin >> nopti;
+    std::cout << "Mic dejun (1/0)? ";
+    std::cin >> micDejun;
+    std::cout << "Room service (1/0)? ";
+    std::cin >> roomService;
 }
 
-void loop() {
+void meniu() {
+    auto &hotel = Hotel::getInstance();
     int optiune;
     while (true) {
-        //afisareaMeniu();
+        std::cout << "\n1. Adauga Single\n2. Adauga Double\n3. Adauga Suite\n4. Afiseaza rezervari\n5. Afiseaza angajati\n0. Iesire\nOptiune: ";
         std::cin >> optiune;
+
+        if (optiune==0){ break;}
+        int nopti;
+        bool micDejun, roomService, vedereMare, minibar;
+
         switch (optiune) {
-            //case 1:
-            //etc.
+            case 1:
+                afisareOptiuniCamera(nopti, micDejun, roomService);
+                hotel.adaugaCamera(CameraFactory::creeazaCamera(1, nopti, micDejun, roomService));
+                break;
+            case 2:
+                afisareOptiuniCamera(nopti, micDejun, roomService);
+                std::cout << "Vedere la mare (1/0)? "; std::cin >> vedereMare;
+                hotel.adaugaCamera(CameraFactory::creeazaCamera(2, nopti, micDejun, roomService, vedereMare));
+                break;
+            case 3:
+                afisareOptiuniCamera(nopti, micDejun, roomService);
+                std::cout << "Vedere la mare (1/0)? "; std::cin >> vedereMare;
+                std::cout << "Minibar (1/0)? "; std::cin >> minibar;
+                hotel.adaugaCamera(CameraFactory::creeazaCamera(3, nopti, micDejun, roomService, vedereMare, minibar));
+                break;
+            case 4:
+                hotel.afisareRezervari();
+                break;
+            case 5:
+                hotel.afisareAngajati();
+                break;
+            default:
+                std::cout << "Optiune invalida.\n";
         }
     }
 }
+
 int main() {
-    auto& x=Hotel::getInstance();
+    auto& Hotel=Hotel::getInstance();
+    Hotel.adaugaAngajat(AngajatFactory::creeazaAngajat(1)); // Receptioner
+    Hotel.adaugaAngajat(AngajatFactory::creeazaAngajat(2)); // Menajer
+    Hotel.adaugaAngajat(AngajatFactory::creeazaAngajat(3)); // Manager
+
+    // Pornim meniul interactiv
+    meniu();
     return 0;
 }
