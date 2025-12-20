@@ -95,8 +95,8 @@ public:
 
 class CheckInOut {
 public:
-    virtual void checkIn(int camareOcupate) = 0;
-    virtual void checkOut(int camareOcupate) = 0;
+    virtual void checkIn() = 0;
+    virtual void checkOut() = 0;
     virtual ~CheckInOut() {}
 };
 
@@ -125,11 +125,11 @@ int Angajat::idGen=0;
 class Receptioner: public Angajat, public CheckInOut {
 public:
     Receptioner(): Angajat(){}
-    void checkIn(int camereOcupate) override {
+    void checkIn() override {
         std::cout << "Receptioner " << idAngajat << " face check-in.\n";
         consumaEnergie(25);
     }
-    void checkOut(int camereOcupate) override {
+    void checkOut() override {
         std::cout << "Receptioner " << idAngajat << " face check-out.\n";
         consumaEnergie(25);
     }
@@ -150,13 +150,13 @@ public:
 class Manager : public Angajat, public CheckInOut {
 public:
     Manager() : Angajat() {}
-    void checkIn(int camereOcupate) override {
+    void checkIn() override {
         std::cout << "Manager " << idAngajat << " supraveghează check-in.\n";
-        consumaEnergie(5 * camereOcupate);
+        consumaEnergie(25);
     }
-    void checkOut( int camereOcupate ) override {
+    void checkOut() override {
         std::cout << "Manager " << idAngajat << " supraveghează check-out.\n";
-        consumaEnergie(5 * camereOcupate);
+        consumaEnergie(25);
     }
     void servicii() override{}
 };
