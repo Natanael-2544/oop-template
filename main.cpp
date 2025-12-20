@@ -1,13 +1,14 @@
 #include <iostream>
 #include <vector>
 #include <stdexcept>
+#include <algorithm>
 #include <string>
 
 //Clasa Camera: Single, Double, Suite
 class Camera {
     static int idGenerator;
-    int id;
 protected:
+    int id;
     int nrNopti;
     int pretNoapte;
     bool micDejun;
@@ -29,6 +30,8 @@ public:
         c.afisare(out);
         return out;
     }
+    bool hasRoomService() const { return roomService; }
+    int getNopti() const { return nrNopti; }
     virtual ~ Camera()=default;
 };
 int Camera::idGenerator = 0;
@@ -38,14 +41,14 @@ public:
     Single(const int& nrNopti_, bool micDejun_ = false, bool roomService_=false):
          Camera(nrNopti_, 100, micDejun_, roomService_) {}
 
-    void afisare(std::ostream& out) const override {
-        out<<" Single: "<< getId()
-             << " (NrNopti= " <<nrNopti
-             << " MicDejun= " <<micDejun
-             << " RoomService= " <<roomService<< ")\n";
+    double calcPret() const {
+        return calcPretBaza();
     }
-    double calcPret() override {
-        return calcPretBaza();}
+    void afisare(std::ostream& out) const override {
+        out<< "Single ID:" << id << " Nopti:" << nrNopti
+                  << " MicDejun:" << micDejun << " RoomService:" << roomService
+                  << " Pret:" << calcPret() << "\n";
+    }
 };
 
 class Double: public Camera {
@@ -53,17 +56,17 @@ class Double: public Camera {
     public:
     Double(const int& nrNopti_,  bool micDejun_ = false, bool roomService_=false, bool vedereMare_ = false)
         : Camera(nrNopti_, 100 * 1.25, micDejun_, roomService_), vedereMare(vedereMare_) {}
-    void afisare(std::ostream& out) const override {
-        out<<" Double: "<< getId()
-             << " (NrNopti= " <<nrNopti
-             << " MicDejun= " <<micDejun
-             << " RoomService= " <<roomService
-             <<" VedereMare= " <<vedereMare<< ")\n";
-    }
-    double calcPret() override {
+
+    double calcPret() const {
         double pret = calcPretBaza();
         if (vedereMare) pret += 5 * nrNopti;
         return pret;
+    }
+    void afisare(std::ostream& out) const override {
+        out<< "Double ID:" << id << " Nopti:" << nrNopti
+                  << " MicDejun:" << micDejun << " RoomService:" << roomService
+                  << " VedereMare:" << vedereMare
+                  << " Pret:" << calcPret() << "\n";
     }
 };
 
@@ -73,19 +76,18 @@ class Suite: public Camera {
 public:
     Suite(const int& nrNopti_, bool micDejun_ = false, bool roomService_=false, bool vedereMare_ = false, bool minibar_ = false)
         : Camera(nrNopti_, 100 * 1.5, micDejun_, roomService_), vedereMare(vedereMare_), minibar(minibar_) {}
-    void afisare(std::ostream& out) const override {
-        out<<" Suite: "<< getId()
-             << " (NrNopti= " <<nrNopti
-             << " MicDejun= " <<micDejun
-             << "roomService= "<<roomService
-             <<" VedereMare= " <<vedereMare
-             <<" Minibar= " <<minibar<< ")";
-    }
-    double calcPret() override {
+
+    double calcPret() const {
         double pret = calcPretBaza();
         if (vedereMare) pret += 10 * nrNopti;
-        if (minibar) pret += 15 * nrNopti;
+        if (minibar) pret += 5 * nrNopti;
         return pret;
+    }
+    void afisare(std::ostream& out) const override {
+        out<< "Suite ID:" << id << " Nopti:" << nrNopti
+                  << " MicDejun:" << micDejun << " RoomService:" << roomService
+                  << " VedereMare:" << vedereMare << " Minibar:" << minibar
+                  << " Pret:" << calcPret() << "\n";
     }
 };
 //----------------------------------------------------------------------------
@@ -99,7 +101,7 @@ public:
 };
 
 class Angajat {
-    static int idGenAngajat;
+    static int idGen;
 protected:
     int idAngajat;
     int energie;
@@ -111,14 +113,14 @@ protected:
     }
 public:
     Angajat(const int& energie_=100):
-        idAngajat(++idGenAngajat), energie(energie_) {}
+        idAngajat(++idGen), energie(energie_) {}
     int getEnergie()const {return energie;}
     int getIdAngajat()const {return idAngajat;}
     void resetEnergie() { energie = 100; }
     virtual void servicii()=0;
     virtual ~Angajat()=default;
 };
-int Angajat::idGenAngajat=0;
+int Angajat::idGen=0;
 
 class Receptioner: public Angajat, public CheckInOut {
 public:
@@ -139,7 +141,6 @@ public:
 class Menajer : public Angajat {
 public:
     Menajer() : Angajat() {}
-
     void servicii() override {
         std::cout << "Menajer " << idAngajat << " efectuează room service/curățenie.\n";
         consumaEnergie(15);
@@ -159,8 +160,64 @@ public:
     }
 };
 
+//----------------------------------------------------------------------------
+class Hotel {
+    std::vector<Camera*> camere;
+    std::vector<Angajat*> angajati;
+    Hotel()=default;
+public:
+    Hotel(const Hotel&)=delete;
+    Hotel& operator=(const Hotel&)=delete;
+    static Hotel& getInstance() {
+        static Hotel h;
+        return h;
+    }
 
+    void adaugaCamera(Camera *c) {
+        camere.push_back(c);
+    }
+    void adaugaAngajat(Angajat* a) {
+        angajati.push_back(a);
+    }
+    void afisareAngajati() {
+        int recep=0, menajer=0, manager=0;
+        for (auto a: angajati) {
+            if (dynamic_cast<Receptioner*>(a)){ recep++;}
+            if (dynamic_cast<Menajer*>(a)){ menajer++;}
+            if (dynamic_cast<Manager*>(a)){ manager++;}
+        }
+        std::cout << "Receptioneri:" << recep << " Menajeri:" << menajer << " Manageri:" << manager << "\n";
+    }
+
+    void afisareRezervari() {
+
+    }
+};
+
+int afisare() {
+    int x;
+    std::cout << "1.Adauga Single"<<" ";
+    std::cout<<"2.Adauga Double"<<" ";
+    std::cout<<"3.Adauga Suite"<<" ";
+    std::cout << "4.Upgrade element ";
+    std::cout << "5.Afiseaza camere ";
+    std::cout << "\nOptiune: ";
+    std::cin >> x;
+    return x;
+}
+
+void loop() {
+    int optiune;
+    while (true) {
+        //afisareaMeniu();
+        std::cin >> optiune;
+        switch (optiune) {
+            //case 1:
+            //etc.
+        }
+    }
+}
 int main() {
-
+    auto& x=Hotel::getInstance();
     return 0;
 }
