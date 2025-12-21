@@ -317,6 +317,42 @@ public:
         }
     }
 
+    void executaCheck(bool isCheckIn) {
+        auto& hotel = Hotel::getInstance();
+        bool finalizat = false;
+        while (!finalizat) {
+            for (auto ang : hotel.getAngajati()) {
+                if (auto r = dynamic_cast<Receptioner*>(ang)) {
+                    int cost;
+                    if (isCheckIn) {
+                        cost = r->getCostCheckIn();
+                    } else {
+                        cost = r->getCostCheckOut();
+                    }
+                    if (r->getEnergie() >= cost) {
+                        if (isCheckIn) r->checkIn();
+                        else r->checkOut();
+                        finalizat = true;
+                        break;
+                    } else {
+                        // Receptioner fara energie -> adaugam unul nou
+                        auto nou = AngajatFactory::creeazaAngajat(1);
+                        hotel.adaugaAngajat(nou);
+                        std::cout << "S-a adaugat un nou Receptioner.\n";
+
+                        // Folosim imediat noul receptioner (cast la Receptioner*)
+                        if (auto rNou = dynamic_cast<Receptioner*>(nou)) {
+                            if (isCheckIn) rNou->checkIn();
+                            else rNou->checkOut();
+                        }
+                        finalizat = true;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
     void ruleazaZi() {
     auto& hotel = Hotel::getInstance();
     std::cout << "== START ==\n";
