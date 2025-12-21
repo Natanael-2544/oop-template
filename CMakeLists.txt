@@ -54,7 +54,6 @@ add_executable(${MAIN_EXECUTABLE_NAME}
         Camera.h
         Angajat.cpp
         Angajat.h
-        CheckInOut.cpp
         CheckInOut.h
         Single.cpp
         Single.h
@@ -68,9 +67,7 @@ add_executable(${MAIN_EXECUTABLE_NAME}
         Menajer.h
         Manager.cpp
         Manager.h
-        CameraFactory.cpp
         CameraFactory.h
-        AngajatFactory.cpp
         AngajatFactory.h
         Hotel.cpp
         Hotel.h

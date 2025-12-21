@@ -2,7 +2,16 @@
 // Created by Nati on 12/20/2025.
 //
 
-#ifndef OOP_CHECKINOUT_H
-#define OOP_CHECKINOUT_H
+#ifndef CHECKINOUT_H
+#define CHECKINOUT_H
 
-#endif //OOP_CHECKINOUT_H
+#include "Camera.h"
+
+class CheckInOut {
+public:
+    virtual void checkIn(Camera* c) = 0;
+    virtual void checkOut(Camera* c) = 0;
+    virtual ~CheckInOut() {}
+};
+
+#endif // CHECKINOUT_H

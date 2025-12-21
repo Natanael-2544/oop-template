@@ -6,8 +6,14 @@
 #define OOP_MENAJER_H
 
 
-class Menajer {
-};
+#include "Angajat.h"
+#include <iostream>
 
+class Menajer : public Angajat {
+public:
+    Menajer();
+    int getCostServicii() const;
+    void servicii() override;
+};
 
 #endif //OOP_MENAJER_H
