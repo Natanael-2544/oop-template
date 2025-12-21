@@ -20,9 +20,6 @@ protected:
 public:
     Angajat(const int& energie_ = 100) : idAngajat(++idGen), energie(energie_) {}
     int getEnergie() const { return energie; }
-    void scadeEnergie(int cost) { consumaEnergie(cost); }
-    int getIdAngajat() const { return idAngajat; }
-    void resetEnergie() { energie = 100; }
     virtual void servicii() = 0;
     virtual ~Angajat() = default;
 };

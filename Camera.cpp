@@ -24,4 +24,4 @@ std::ostream& operator<<(std::ostream& out, const Camera& c) {
 }
 
 bool Camera::hasRoomService() const { return roomService; }
-int Camera::getNopti() const { return nrNopti; }
+
