@@ -56,6 +56,24 @@ add_executable(${MAIN_EXECUTABLE_NAME}
         Angajat.h
         CheckInOut.cpp
         CheckInOut.h
+        Single.cpp
+        Single.h
+        Double.cpp
+        Double.h
+        Suite.cpp
+        Suite.h
+        Receptioner.cpp
+        Receptioner.h
+        Menajer.cpp
+        Menajer.h
+        Manager.cpp
+        Manager.h
+        CameraFactory.cpp
+        CameraFactory.h
+        AngajatFactory.cpp
+        AngajatFactory.h
+        Hotel.cpp
+        Hotel.h
 )
 
 # NOTE: Add all defined targets (e.g. executables, libraries, etc. )

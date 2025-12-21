@@ -1,40 +1,50 @@
-    #include <iostream>
-    #include <vector>
-    #include <stdexcept>
-    #include <algorithm>
-    #include <string>
+#include <iostream>
+#include <vector>
+#include <stdexcept>
+#include <algorithm>
+#include <string>
+
+#include "Hotel.h"
+#include "CameraFactory.h"
+#include "AngajatFactory.h"
+#include "Single.h"
+#include "Double.h"
+#include "Suite.h"
+#include "Receptioner.h"
+#include "Menajer.h"
+#include "Manager.h"
 
     //Clasa Camera: Single, Double, Suite
-    class Camera {
-        static int idGenerator;
-    protected:
-        int id;
-        int nrNopti;
-        int pretNoapte;
-        bool micDejun;
-        bool roomService;
-        double calcPretBaza() const {
-            double pret = pretNoapte;
-            if (micDejun) {pret += 20;}
-            if (roomService) {pret += 5;}
-            return pret * nrNopti;
-        }
-    public:
-        Camera(const int& nrNopti_, const int& pretNoapte_=100, bool micDejun_=false, bool roomService_=false):
-        id(++idGenerator), nrNopti(nrNopti_), pretNoapte(pretNoapte_), micDejun(micDejun_), roomService(roomService_) {}
-        int getId()const{ return id;}
-
-        virtual double calcPret() const =0;
-        virtual void afisare(std::ostream& out) const = 0;
-        friend std::ostream& operator<<(std::ostream& out, const Camera& c) {
-            c.afisare(out);
-            return out;
-        }
-        bool hasRoomService() const { return roomService; }
-        int getNopti() const { return nrNopti; }
-        virtual ~ Camera()=default;
-    };
-    int Camera::idGenerator = 0;
+    // class Camera {
+    //     static int idGenerator;
+    // protected:
+    //     int id;
+    //     int nrNopti;
+    //     int pretNoapte;
+    //     bool micDejun;
+    //     bool roomService;
+    //     double calcPretBaza() const {
+    //         double pret = pretNoapte;
+    //         if (micDejun) {pret += 20;}
+    //         if (roomService) {pret += 5;}
+    //         return pret * nrNopti;
+    //     }
+    // public:
+    //     Camera(const int& nrNopti_, const int& pretNoapte_=100, bool micDejun_=false, bool roomService_=false):
+    //     id(++idGenerator), nrNopti(nrNopti_), pretNoapte(pretNoapte_), micDejun(micDejun_), roomService(roomService_) {}
+    //     int getId()const{ return id;}
+    //
+    //     virtual double calcPret() const =0;
+    //     virtual void afisare(std::ostream& out) const = 0;
+    //     friend std::ostream& operator<<(std::ostream& out, const Camera& c) {
+    //         c.afisare(out);
+    //         return out;
+    //     }
+    //     bool hasRoomService() const { return roomService; }
+    //     int getNopti() const { return nrNopti; }
+    //     virtual ~ Camera()=default;
+    // };
+    // int Camera::idGenerator = 0;
 
     class Single: public Camera {
     public:
@@ -95,8 +105,8 @@
 
     class CheckInOut {
     public:
-        virtual void checkIn() = 0;
-        virtual void checkOut() = 0;
+        virtual void checkIn(Camera* c) = 0;
+        virtual void checkOut(Camera* c) = 0;
         virtual ~CheckInOut() {}
     };
 
@@ -128,14 +138,18 @@ public:
     Receptioner(): Angajat(){}
     int getCostCheckIn() const { return 20; }
     int getCostCheckOut() const { return 20; }
-    void checkIn() override {
-        std::cout << "Receptioner " << idAngajat << " face check-in.\n";
+    void checkIn(Camera* c) override {
+        std::cout << "Receptioner " << idAngajat
+                  << " supravegheaza check-in pentru Camera ID:" << c->getId() << ".\n";
         consumaEnergie(getCostCheckIn());
     }
-    void checkOut() override {
-        std::cout << "Receptioner " << idAngajat << " face check-out.\n";
+
+    void checkOut(Camera* c) override {
+        std::cout << "Rceptioner " << idAngajat
+                  << " supravegheaza check-out pentru Camera ID:" << c->getId() << ".\n";
         consumaEnergie(getCostCheckOut());
     }
+
     void servicii() override {
         // Receptioner nu face room service
     }
@@ -156,12 +170,14 @@ public:
     Manager() : Angajat() {}
     int getCostCheckIn() const { return 5; }
     int getCostCheckOut() const { return 5; }
-    void checkIn() override {
-        std::cout << "Manager " << idAngajat << " supravegheaza check-in.\n";
+    void checkIn(Camera *c) override {
+        std::cout << "Manager " << idAngajat
+        << " supravegheaza check-in pentru Camera ID:" << c->getId() << ".\n";
         consumaEnergie(getCostCheckIn());
     }
-    void checkOut() override {
-        std::cout << "Manager " << idAngajat << " supravegheaza check-out.\n";
+    void checkOut(Camera *c) override {
+        std::cout << "Manager " << idAngajat
+        << " supravegheaza check-out pentru Camera ID:" << c->getId() << ".\n";
         consumaEnergie(getCostCheckOut());
     }
     void servicii() override{}
@@ -317,7 +333,7 @@ public:
         }
     }
 
-    void executaCheck(bool isCheckIn) {
+    void executaCheck(bool isCheckIn, Camera *c) {
         auto& hotel = Hotel::getInstance();
         bool finalizat = false;
         while (!finalizat) {
@@ -330,8 +346,8 @@ public:
                         cost = r->getCostCheckOut();
                     }
                     if (r->getEnergie() >= cost) {
-                        if (isCheckIn) r->checkIn();
-                        else r->checkOut();
+                        if (isCheckIn) r->checkIn(c);
+                        else r->checkOut(c);
                         finalizat = true;
                         break;
                     } else {
@@ -342,8 +358,8 @@ public:
 
                         // Folosim imediat noul receptioner (cast la Receptioner*)
                         if (auto rNou = dynamic_cast<Receptioner*>(nou)) {
-                            if (isCheckIn) rNou->checkIn();
-                            else rNou->checkOut();
+                            if (isCheckIn) rNou->checkIn(c);
+                            else rNou->checkOut(c);
                         }
                         finalizat = true;
                         break;
@@ -356,11 +372,13 @@ public:
     void ruleazaZi() {
     auto& hotel = Hotel::getInstance();
     std::cout << "== START ==\n";
+        std::vector<Camera*> camereSortate = hotel.getCamere();
+        std::sort(camereSortate.begin(), camereSortate.end(),
+                  [](Camera* a, Camera* b) { return a->calcPret() > b->calcPret(); });
 
-    for (auto& c : hotel.getCamere()) {
-
-        // --- CHECK-IN cu receptioner ---
-        executaCheck(true);
+        for (auto& c : camereSortate) {
+            // CHECK-IN cu receptioner
+            executaCheck(true, c);
 
         // --- ROOM SERVICE cu menajer ---
         if (c->hasRoomService()) {
@@ -391,16 +409,16 @@ public:
         }
 
         // --- CHECK-OUT cu receptioner ---
-        executaCheck(false);
+        executaCheck(false, c);
 
         // --- Manager supravegheaza check-in / check-out ---
         for (auto ang : hotel.getAngajati()) {
             if (auto m = dynamic_cast<Manager*>(ang)) {
                 if (m->getEnergie() >= m->getCostCheckIn()) {
-                    m->checkIn();  // scade 5 energie
+                    m->checkIn(c);  // scade 5 energie
                 }
                 if (m->getEnergie() >= m->getCostCheckOut()) {
-                    m->checkOut(); // scade 5 energie
+                    m->checkOut(c); // scade 5 energie
                 }
             }
         }
