@@ -110,7 +110,7 @@
     std::cout << "== START ==\n";
         std::vector<Camera*> camereSortate = hotel.getCamere();
         std::sort(camereSortate.begin(), camereSortate.end(),
-                  [](Camera* a, Camera* b) { return a->calcPret() > b->calcPret(); });
+                  [](const Camera* a, const Camera* b) { return a->calcPret() > b->calcPret(); });
 
         for (auto& c : camereSortate) {
             // CHECK-IN cu receptioner
