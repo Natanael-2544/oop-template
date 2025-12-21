@@ -35,7 +35,7 @@ void Hotel::afisareRezervari() {
         return;
     }
     std::cout << "Rezervari hotel:\n";
-    for (auto c : camere) {
+    for (const auto c : camere) {
         std::cout << *c;
     }
 }
@@ -46,11 +46,11 @@ void Hotel::afisareCamereDescrescator() {
         return;
     }
     std::vector<Camera*> copie = camere;
-    std::sort(copie.begin(), copie.end(), [](Camera* a, Camera* b) {
+    std::sort(copie.begin(), copie.end(), [](const Camera* a, const Camera* b) {
         return a->calcPret() > b->calcPret();
     });
     std::cout << "Camere ordonate descrescator dupa pret:\n";
-    for (auto c : copie) {
+    for (const auto c : copie) {
         std::cout << *c;
     }
 }
