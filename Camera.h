@@ -18,7 +18,7 @@ protected:
     double calcPretBaza() const;
 
 public:
-    Camera(int nrNopti_, int pretNoapte_=100, bool micDejun_=false, bool roomService_=false);
+    Camera(const int& nrNopti_, const int& pretNoapte_=100, bool micDejun_=false, bool roomService_=false);
     virtual double calcPret() const = 0;
     virtual void afisare(std::ostream& out) const = 0;
     int getId() const;
