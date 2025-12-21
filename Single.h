@@ -10,7 +10,7 @@
 
 class Single : public Camera {
 public:
-    Single(const int& nrNopti_, bool micDejun_ = false, bool roomService_ = false);
+    explicit Single(const int& nrNopti_, bool micDejun_ = false, bool roomService_ = false);
 
     double calcPret() const override;
     void afisare(std::ostream& out) const override;

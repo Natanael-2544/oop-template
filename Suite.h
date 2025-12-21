@@ -12,7 +12,7 @@ class Suite : public Camera {
     bool vedereMare;
     bool minibar;
 public:
-    Suite(const int& nrNopti_, bool micDejun_ = false, bool roomService_ = false,
+ explicit Suite(const int& nrNopti_, bool micDejun_ = false, bool roomService_ = false,
           bool vedereMare_ = false, bool minibar_ = false);
 
     double calcPret() const override;
