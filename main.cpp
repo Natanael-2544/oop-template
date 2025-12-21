@@ -358,84 +358,49 @@ public:
     std::cout << "== START ==\n";
 
     for (auto& c : hotel.getCamere()) {
-        // --- CHECK-IN ---
-        for (size_t i = 0; i < hotel.getAngajati().size(); i++) {
-            auto ang = hotel.getAngajati()[i];
 
-            if (auto r = dynamic_cast<Receptioner*>(ang)) {
-                int cost = r->getCostCheckIn();
-                if (r->getEnergie() < cost) {
-                    int necesar = cost - r->getEnergie();
-                    r->scadeEnergie(r->getEnergie()); // lasa la 0
-                    auto nou = AngajatFactory::creeazaAngajat(1);
-                    nou->scadeEnergie(cost); // noul receptioner preia intreaga sarcina
-                    hotel.adaugaAngajat(nou);
-                    std::cout << "S-a adaugat un nou Receptioner.\n";
-                } else {
-                    r->checkIn();
-                }
-            }
-            else if (auto m = dynamic_cast<Manager*>(ang)) {
-                int cost = m->getCostCheckIn();
-                if (m->getEnergie() < cost) {
-                    int necesar = cost - m->getEnergie();
-                    m->scadeEnergie(m->getEnergie()); // lasa la 0
-                    auto nou = AngajatFactory::creeazaAngajat(3);
-                    nou->scadeEnergie(cost); // noul manager preia intreaga sarcina
-                    hotel.adaugaAngajat(nou);
-                    std::cout << "S-a adaugat un nou Manager.\n";
-                } else {
-                    m->checkIn();
-                }
-            }
-        }
+        // --- CHECK-IN cu receptioner ---
+        executaCheck(true);
 
-        // --- ROOM SERVICE ---
+        // --- ROOM SERVICE cu menajer ---
         if (c->hasRoomService()) {
-            for (size_t i = 0; i < hotel.getAngajati().size(); i++) {
-                auto ang = hotel.getAngajati()[i];
-                if (auto m = dynamic_cast<Menajer*>(ang)) {
-                    int cost = m->getCostServicii();
-                    if (m->getEnergie() < cost) {
-                        int necesar = cost - m->getEnergie();
-                        m->scadeEnergie(m->getEnergie()); // lasa la 0
-                        auto nou = AngajatFactory::creeazaAngajat(2);
-                        nou->scadeEnergie(cost); // noul menajer preia intreaga sarcina
-                        hotel.adaugaAngajat(nou);
-                        std::cout << "S-a adaugat un nou Menajer.\n";
-                    } else {
-                        m->servicii();
+            bool serviciuFinalizat = false;
+            while (!serviciuFinalizat) {
+                for (auto ang : hotel.getAngajati()) {
+                    if (auto m = dynamic_cast<Menajer*>(ang)) {
+                        int cost = m->getCostServicii();
+                        if (m->getEnergie() >= cost) {
+                            m->servicii();
+                            serviciuFinalizat = true;
+                            break;
+                        } else {
+                            auto nou = AngajatFactory::creeazaAngajat(2);
+                            hotel.adaugaAngajat(nou);
+                            std::cout << "S-a adaugat un nou Menajer.\n";
+                            if (auto mNou = dynamic_cast<Menajer*>(nou)) {
+                                if (mNou->getEnergie() >= mNou->getCostServicii()) {
+                                    mNou->servicii();
+                                    serviciuFinalizat = true;
+                                    break;
+                                }
+                            }
+                        }
                     }
                 }
             }
         }
 
-        // --- CHECK-OUT ---
-        for (size_t i = 0; i < hotel.getAngajati().size(); i++) {
-            auto ang = hotel.getAngajati()[i];
+        // --- CHECK-OUT cu receptioner ---
+        executaCheck(false);
 
-            if (auto r = dynamic_cast<Receptioner*>(ang)) {
-                int cost = r->getCostCheckOut();
-                if (r->getEnergie() < cost) {
-                    r->scadeEnergie(r->getEnergie()); // lasa la 0
-                    auto nou = AngajatFactory::creeazaAngajat(1);
-                    nou->scadeEnergie(cost); // noul receptioner preia intreaga sarcina
-                    hotel.adaugaAngajat(nou);
-                    std::cout << "S-a adaugat un nou Receptioner.\n";
-                } else {
-                    r->checkOut();
+        // --- Manager supravegheaza check-in / check-out ---
+        for (auto ang : hotel.getAngajati()) {
+            if (auto m = dynamic_cast<Manager*>(ang)) {
+                if (m->getEnergie() >= m->getCostCheckIn()) {
+                    m->checkIn();  // scade 5 energie
                 }
-            }
-            else if (auto m = dynamic_cast<Manager*>(ang)) {
-                int cost = m->getCostCheckOut();
-                if (m->getEnergie() < cost) {
-                    m->scadeEnergie(m->getEnergie()); // lasa la 0
-                    auto nou = AngajatFactory::creeazaAngajat(3);
-                    nou->scadeEnergie(cost); // noul manager preia intreaga sarcina
-                    hotel.adaugaAngajat(nou);
-                    std::cout << "S-a adaugat un nou Manager.\n";
-                } else {
-                    m->checkOut();
+                if (m->getEnergie() >= m->getCostCheckOut()) {
+                    m->checkOut(); // scade 5 energie
                 }
             }
         }
@@ -444,6 +409,7 @@ public:
         std::cout << "== END ==\n";
     }
 }
+
     int main() {
         auto& Hotel=Hotel::getInstance();
         Hotel.adaugaAngajat(AngajatFactory::creeazaAngajat(1)); // Receptioner
