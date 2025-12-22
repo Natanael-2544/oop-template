@@ -62,20 +62,19 @@ Fiecare angajat are:
 - **Menajer**
     - curățenie / room service: `15 energie`
 - **Manager**
-    - check-in / check-out: `5 energie × număr camere ocupate`
+    - check-in si check-out: `Consuma per camera 5 energie pt Check-in, respectiv 5 pt Check-Out`
 
-Dacă energia unui angajat scade sub `0`, se afișează un mesaj de avertizare.
+Dacă pt o actiune energia unui angajat de un anumit tip ar scadea sub `0`, se adauga un alt angajat de acel tip care continua actiunea.
 
 ---
 
 ## **Scop**
 Aplicația permite:
 
-- Afișarea numărului de angajați pentru fiecare tip în parte
+- Afișarea angajaților pentru fiecare tip în parte
 - Implementarea simulării și afișarea unui ciclu (sub orice formă)
-- Crearea unei opțiuni ca între cicluri să poți selecta comenzi care sunt prioritare și ar trebui să fie terminate primele
-- Optimizarea ciclului (se va prioritiza ca fiecare angajat să își facă rolul; vezi exemplu pentru varianta neoptimizată)
+- Optimizarea ciclului (se va prioritiza ca angajatii sa se ocupe mai intai de camerele cu pretul total cel mai mare)
 - Posibilitatea de a selecta strategia de alegere a comenzilor care sunt procesate (de exemplu FIFO, comanda cea mai „grea” prima, comanda cea mai ușoară prima)
-- Rezervări
-- Afisarea clientilor dupa pretul total in oridnea descrescatoare 
-- Prioritizarea sa se faca dupa clientul cu cel mai mai pret
+- Afisarea rezervărilor
+- Afisarea camerelor dupa pretul total in oridnea descrescatoare 
+- Prioritizarea sa se faca dupa clientul care a inchiriat camera cu cel mai mare pret
