@@ -24,9 +24,13 @@ jobs:
         run: |
           cd build
           cmake -DCMAKE_BUILD_TYPE=Release ..
-          cmake --build . --config Release
+          cmake --build .
+
       - name: List build folder
         run: ls -l build
-      - name: Run program with input
-        run: ./build/Release/oop-template < tastatura.txt
 
+      - name: Make executable
+        run: chmod +x build/oop-template
+
+      - name: Run program with input
+        run: ./build/oop-template < tastatura.txt
