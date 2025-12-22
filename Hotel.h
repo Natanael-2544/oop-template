@@ -23,6 +23,7 @@ protected:
 
 public:
     Hotel(const Hotel&) = delete;
+    ~Hotel();
     Hotel& operator=(const Hotel&) = delete;
 
     static Hotel& getInstance();

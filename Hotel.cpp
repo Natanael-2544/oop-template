@@ -4,6 +4,10 @@
 
 #include "Hotel.h"
 
+Hotel::~Hotel() {
+    for (auto c : camere) delete c;
+    for (auto a : angajati) delete a;
+}
 Hotel& Hotel::getInstance() {
     static Hotel h;
     return h;
