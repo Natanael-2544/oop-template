@@ -32,9 +32,8 @@
         while (true) {
             std:: cout<<"Bine ati venit la hotelul nostru! Aveti mai jos ofertele noastre. Cu ce va putem ajuta?";
             std::cout << "\n1. Adauga Single\n2. Adauga Double\n3. Adauga Suite\n4. Afiseaza rezervari\n5. Afiseaza angajati\n6. Afiseaza camere descrescator dupa pret\n0. Iesire\nOptiune: ";
-            std::cin >> optiune;
-
-            if (optiune==0){ break;}
+            if (!(std::cin >> optiune)) {break;}
+            if (optiune==0){ std::cout << "La revedere!\n"; break;}
             int nopti;
             bool micDejun, roomService, vedereMare, minibar;
 
