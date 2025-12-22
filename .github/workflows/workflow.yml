@@ -25,6 +25,7 @@ jobs:
           cd build
           cmake ..
           cmake --build .
-
+      - name: List build folder
+        run: ls -l build
       - name: Run program with input
         run: ./build/oop-template < tastatura.txt
