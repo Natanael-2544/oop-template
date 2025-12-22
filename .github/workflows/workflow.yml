@@ -28,4 +28,5 @@ jobs:
       - name: List build folder
         run: ls -l build
       - name: Run program with input
-        run: ./build/oop-template < tastatura.txt
+        run: ./build/Debug/oop-template < tastatura.txt
+
